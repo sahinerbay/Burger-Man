@@ -7,10 +7,8 @@ const Burger = props => {
 
 	let transformedIngredients = Object.keys(props.ingredients)
 		.map(ingEl => {
-			console.log([...Array(props.ingredients[ingEl])])
 			return [...Array(props.ingredients[ingEl])]
 				.map((_, index) => {
-					console.log(_)
 					return <BurgerIngredient key={ingEl + index} type={ingEl} />
 				})
 		})
