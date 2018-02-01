@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Logo from './../../Logo/logo';
+import Logo from './../../Logo/Logo';
+import NavigationItems from './../NavigationItems/NavigationItems';
 import classes from './Toolbar.css';
 
 const Toolbar = props => {
@@ -8,9 +9,11 @@ const Toolbar = props => {
 		<div>
 			<header className={classes.Toolbar}>
 				<div>Menu</div>
-				<Logo />
-				<nav>
-					...
+				<div className={classes.Logo}>
+					<Logo />
+				</div>
+				<nav className={classes.DesktopOnly}>
+				<NavigationItems />
 				</nav>
 			</header>
 		</div>
@@ -18,7 +21,7 @@ const Toolbar = props => {
 };
 
 Toolbar.propTypes = {
-	
+
 };
 
 export default Toolbar;
