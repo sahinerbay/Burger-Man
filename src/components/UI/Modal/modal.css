@@ -18,10 +18,6 @@
 	transform: translateY(-100vh);
 }
 
-.Show {
-
-}
-
 @media (min-width: 600px) {
 	.Modal {
 		 width: 500px;
