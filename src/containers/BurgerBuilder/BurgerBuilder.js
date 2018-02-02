@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Aux from './../../hoc/Aux';
+import Wrapper from './../../hoc/Wrapper/wrapper';
 import Burger from './../../components/Burger/Burger';
 import BurgerControls from './../../components/Burger/BurgerControls/BurgerControls';
 import Modal from './../../components/UI/Modal/modal';
@@ -53,7 +53,7 @@ class BurgerBuilder extends Component {
 
 	removeIngredient = type => {
 		let count = this.state.ingredients[type];
-		if (count == 0) {
+		if (count === 0) {
 			return;
 		} else {
 			count = count - 1;
@@ -71,7 +71,7 @@ class BurgerBuilder extends Component {
 		//Calculate new total
 		let currentTotal = this.state.totalPrice;
 		let newTotal;
-		if (currentTotal == 0) {
+		if (currentTotal === 0) {
 			return;
 		} else {
 			newTotal = this.state.totalPrice - price;
@@ -97,7 +97,7 @@ class BurgerBuilder extends Component {
 		}
 
 		return (
-			<Aux>
+			<Wrapper>
 				<Modal show={this.state.modal} modalClose={this.modalInactive}>
 					<OrderSummary
 						modalActive={this.modalActive}
@@ -113,7 +113,7 @@ class BurgerBuilder extends Component {
 					currentPrice={this.state.totalPrice}
 					purchasable={this.state.purchasable}
 					order={this.modalActive} />
-			</Aux>
+			</Wrapper>
 		);
 	}
 }

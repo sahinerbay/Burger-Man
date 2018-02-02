@@ -1,18 +1,23 @@
 import React from 'react';
 import classes from './modal.css';
 import Backdrop from './../Backdrop/Backdrop';
-import Wrapper from './../../../hoc/wrapper';
+import Wrapper from './../../../hoc/Wrapper/wrapper';
 
-const modal = props => {
+class Modal extends React.Component {
+	shouldComponentUpdate(nextProps, nextState) {
+		return nextProps.show !== this.props.show;
+	} 
 
-	return (
-		<Wrapper>
-			<Backdrop show={props.show} handleClick={props.modalClose} />
-			<div className={props.show === true ? classes.Modal : `${classes.Modal} ${classes.Hidden}`}>
-				{props.children}
-			</div>
-		</Wrapper>
-	)
-};
+	render() {
+		return (
+			<Wrapper>
+				<Backdrop show={this.props.show} handleClick={this.props.modalClose} />
+				<div className={this.props.show === true ? classes.Modal : `${classes.Modal} ${classes.Hidden}`}>
+					{this.props.children}
+				</div>
+			</Wrapper>
+		)
+	}
+} 
 
-export default modal;
+export default Modal;

@@ -18,7 +18,10 @@ const BurgerControl = props => {
 };
 
 BurgerControl.propTypes = {
-
+	label: PropTypes.string.isRequired,
+	removeIngredient: PropTypes.func.isRequired,
+	disabled: PropTypes.bool.isRequired,
+	addIngredient: PropTypes.func.isRequired
 };
 
 export default BurgerControl;
