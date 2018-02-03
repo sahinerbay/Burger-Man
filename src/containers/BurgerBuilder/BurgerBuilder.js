@@ -4,6 +4,8 @@ import Burger from './../../components/Burger/Burger';
 import BurgerControls from './../../components/Burger/BurgerControls/BurgerControls';
 import Modal from './../../components/UI/Modal/modal';
 import OrderSummary from './../../components/Burger/OrderSummary/OrderSummary';
+import axios from './../../axios-orders';
+import Spinner from './../../components/UI/Spinner/Spinner';
 
 const PRICE_LIST = {
 	'salad': 0.5,
@@ -22,7 +24,8 @@ class BurgerBuilder extends Component {
 		},
 		totalPrice: 0,
 		purchasable: false,
-		modal: false
+		purchasing: false,
+		loading: false
 	};
 
 	updatePurchaseState = (ingredients) => {
@@ -83,9 +86,35 @@ class BurgerBuilder extends Component {
 		this.updatePurchaseState(updatedIngredients);
 	}
 
-	modalActive = () => this.setState({ modal: true });
+	modalActive = () => this.setState({ purchasing: true });
 
-	modalInactive = () => this.setState({ modal: false });
+	modalInactive = () => this.setState({ purchasing: false });
+
+	purchaseReady = () => {
+		this.setState({ loading: true });
+
+		const order = {
+			ingredients: this.state.ingredients,
+			price: this.state.totalPrice,
+			customer: {
+				name: 'Test',
+				address: {
+					zipcode: '12345',
+					city: 'test',
+					country: 'test'
+				},
+				email: 'test@test.com',
+			},
+			deliveryMethod: 'UPS-Express'
+		};
+		
+		axios.post('/order.json', order)
+			.then(res => this.setState({ loading: false, purchasing: false }))
+			.catch(err => {
+				this.setState({ loading: false, purchasing: false });
+				console.log(err);
+			})
+	}
 
 	render() {
 		const disableIngredients = {
@@ -96,14 +125,19 @@ class BurgerBuilder extends Component {
 			disableIngredients[key] = disableIngredients[key] === 0;
 		}
 
+		let orderSummary = <OrderSummary
+			orderNow={this.purchaseReady}
+			modalInactive={this.modalInactive}
+			ingredients={this.state.ingredients}
+			totalPrice={this.state.totalPrice} />;
+		if (this.state.loading) {
+			orderSummary = <Spinner />
+		}
+
 		return (
 			<Wrapper>
-				<Modal show={this.state.modal} modalClose={this.modalInactive}>
-					<OrderSummary
-						modalActive={this.modalActive}
-						modalInactive={this.modalInactive}
-						ingredients={this.state.ingredients}
-						totalPrice={this.state.totalPrice} />
+				<Modal show={this.state.purchasing} modalClose={this.modalInactive}>
+					{orderSummary}
 				</Modal>
 				<Burger ingredients={this.state.ingredients} />
 				<BurgerControls

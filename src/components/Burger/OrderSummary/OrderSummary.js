@@ -19,7 +19,7 @@ class OrderSummary extends React.Component {
 				<p><strong>Total Price: {this.props.totalPrice.toFixed(2)}</strong></p>
 				<p>Continue to Checkout...</p>
 				<Button type="Danger" handleClick={this.props.modalInactive}>Cancel</Button>
-				<Button type="Success" handleClick={this.props.modalActive}>Continue</Button>
+				<Button type="Success" handleClick={this.props.orderNow}>Continue</Button>
 			</Wrapper>
 		)
 	}
@@ -28,7 +28,7 @@ class OrderSummary extends React.Component {
 OrderSummary.propTypes = {
 	ingredients: PropTypes.object.isRequired,
 	totalPrice: PropTypes.number.isRequired,
-	modalActive: PropTypes.func.isRequired,
+	orderNow: PropTypes.func.isRequired,
 	modalInactive: PropTypes.func.isRequired
 };
 
