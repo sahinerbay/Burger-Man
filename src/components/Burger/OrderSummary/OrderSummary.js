@@ -31,5 +31,5 @@ OrderSummary.propTypes = {
 	orderNow: PropTypes.func.isRequired,
 	modalInactive: PropTypes.func.isRequired
 };
-
+        
 export default OrderSummary;
