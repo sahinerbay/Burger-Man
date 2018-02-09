@@ -12,7 +12,7 @@ class Contact extends React.Component {
 			street: "",
 			zipcode: ""
 		},
-		loading: false
+		loading: false,
 	};
 
 	orderHandler = (event) => {
@@ -20,7 +20,7 @@ class Contact extends React.Component {
 		this.setState({ loading: true });
 		const order = {
 			ingredients: this.props.ingredients,
-			price: this.state.totalPrice,
+			price: this.props.price,
 			customer: {
 				name: 'Test',
 				address: {
@@ -33,7 +33,7 @@ class Contact extends React.Component {
 			deliveryMethod: 'UPS-Express'
 		};
 
-		axios.post('/order.json', order)
+		axios.post('/orders.json', order)
 			.then(res => {
 				this.setState({ loading: false });
 				this.props.history.push('/')

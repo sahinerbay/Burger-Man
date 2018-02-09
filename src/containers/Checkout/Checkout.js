@@ -5,14 +5,19 @@ import Contact from './Contact/Contact';
 
 class Checkout extends React.Component {
 	state = {
-		ingredients: null
+		ingredients: null,
+		totalPrice: 0
 	}
 
 	componentWillMount() {
 		const query = new URLSearchParams(this.props.location.search);
 		const ingredients = {};
 		for (let param of query.entries()) {
-			ingredients[param[0]] = +param[1];
+			if (param[0] === "price") {
+				this.setState({ totalPrice: param[1] })
+			} else {
+				ingredients[param[0]] = +param[1];
+			}
 		}
 		this.setState({ ingredients })
 	}
@@ -30,10 +35,10 @@ class Checkout extends React.Component {
 				<CheckoutSummary
 					ingredients={this.state.ingredients}
 					checkoutCancelled={this.checkoutCancelledHandler}
-					checkoutContinued={this.checkoutContinuedHandler} />
+					checkoutContinued={this.checkoutContinuedHandler}/>
 				<Route
 					path={`${this.props.match.path}/contact`}
-					render={(routeParams) => (<Contact {...routeParams} ingredients={this.state.ingredients} />)} />
+					render={(routeParams) => (<Contact {...routeParams} ingredients={this.state.ingredients} price={this.state.totalPrice}  />)} />
 			</div>
 		)
 	}
