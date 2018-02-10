@@ -14,7 +14,13 @@ class Contact extends React.Component {
 					type: 'text',
 					placeholder: 'Your name'
 				},
-				value: ''
+				value: '',
+				validation: {
+					required: true,
+					minLength: 4
+				},
+				isValid: false,
+				touched: false
 			},
 			zipcode: {
 				elementType: 'input',
@@ -22,7 +28,13 @@ class Contact extends React.Component {
 					type: 'text',
 					placeholder: 'Zip code'
 				},
-				value: ''
+				value: '',
+				validation: {
+					required: true,
+					maxLength: 5
+				},
+				isValid: false,
+				touched: false
 			},
 			street: {
 				elementType: 'input',
@@ -30,7 +42,12 @@ class Contact extends React.Component {
 					type: 'text',
 					placeholder: 'Street name'
 				},
-				value: ''
+				value: '',
+				validation: {
+					required: true,
+				},
+				isValid: false,
+				touched: false
 			},
 			country: {
 				elementType: 'input',
@@ -38,7 +55,12 @@ class Contact extends React.Component {
 					type: 'text',
 					placeholder: 'Country'
 				},
-				value: ''
+				value: '',
+				validation: {
+					required: true
+				},
+				isValid: false,
+				touched: false
 			},
 			email: {
 				elementType: 'input',
@@ -46,7 +68,12 @@ class Contact extends React.Component {
 					type: 'email',
 					placeholder: 'Email address'
 				},
-				value: ''
+				value: '',
+				validation: {
+					required: true
+				},
+				isValid: false,
+				touched: false
 			},
 			deliveryMethod: {
 				elementType: 'select',
@@ -56,9 +83,12 @@ class Contact extends React.Component {
 						{ value: 'fastest', displayValue: 'Fastest' }
 					]
 				},
-				value: ''
+				validation: {},
+				isValid: true,
+				value: 'cheapest'
 			}
 		},
+		isFormValid: false,
 		loading: false,
 	};
 
@@ -97,9 +127,41 @@ class Contact extends React.Component {
 		const clonedFormElement = { ...clonedForm[formKey] };
 
 		clonedFormElement.value = event.target.value;
+		clonedFormElement.isValid = this.checkValidity(clonedFormElement.value, clonedFormElement.validation);
+		clonedFormElement.touched = true;
 		clonedForm[formKey] = clonedFormElement;
 
-		this.setState({ orderForm: clonedForm })
+		let isFormValid = true;
+		for (let validity in clonedForm) {
+			if (clonedForm[validity]) {
+				isFormValid = clonedForm[validity].isValid && isFormValid
+			}
+		}
+		this.setState({
+			orderForm: clonedForm,
+			isFormValid
+		})
+	}
+
+	checkValidity = (value, rules) => {
+		let isValid = true;
+
+		if(!rules) {
+			return true;
+		}
+
+		if (rules.required) {
+			isValid = value.trim() !== "" && isValid;
+		}
+
+		if (rules.minLength) {
+			isValid = value.length >= rules.minLength && isValid;
+		}
+
+		if (rules.maxLength) {
+			isValid = value.length >= rules.maxLength && isValid;
+		}
+		return isValid;
 	}
 
 	render() {
@@ -119,10 +181,14 @@ class Contact extends React.Component {
 						elementType={el.config.elementType}
 						elementConfig={el.config.elementConfig}
 						value={el.config.value}
+						isValid={el.config.isValid}
+						shouldValidate={el.config.validation}
+						touched={el.config.touched}
 						changed={(event) => this.changeHandler(event, el.id)} />
 				))}
 				<Button
-					type="Success">ORDER</Button>
+					type="Success"
+					disabled={!this.state.isFormValid}>ORDER</Button>
 			</form>
 		);
 		if (this.state.loading) {
