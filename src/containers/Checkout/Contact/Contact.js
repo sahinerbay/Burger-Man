@@ -63,15 +63,25 @@ class Contact extends React.Component {
 	};
 
 	orderHandler = (event) => {
+		//Prevent default clicking onSubmit
 		event.preventDefault();
+
+		//Create new object to store contact info details
+		const formData = {};
+		for (let formElementId in this.state.orderForm) {
+			formData[formElementId] = this.state.orderForm[formElementId].value
+		}
+
+		//Show spinner
 		this.setState({ loading: true });
+		//Store order details
 		const order = {
 			ingredients: this.props.ingredients,
 			price: this.props.price,
-
-			deliveryMethod: 'UPS-Express'
+			orderData: formData
 		};
 
+		//Sends the order to firebase
 		axios.post('/orders.json', order)
 			.then(res => {
 				this.setState({ loading: false });
@@ -80,6 +90,16 @@ class Contact extends React.Component {
 			.catch(err => {
 				this.setState({ loading: false });
 			})
+	}
+
+	changeHandler = (event, formKey) => {
+		const clonedForm = { ...this.state.orderForm };
+		const clonedFormElement = { ...clonedForm[formKey] };
+
+		clonedFormElement.value = event.target.value;
+		clonedForm[formKey] = clonedFormElement;
+
+		this.setState({ orderForm: clonedForm })
 	}
 
 	render() {
@@ -92,17 +112,17 @@ class Contact extends React.Component {
 		}
 
 		let form = (
-			<form>
+			<form onSubmit={this.orderHandler}>
 				{formElementsArray.map(el => (
 					<Input
 						key={el.id}
 						elementType={el.config.elementType}
 						elementConfig={el.config.elementConfig}
-						value={el.config.value} />
+						value={el.config.value}
+						changed={(event) => this.changeHandler(event, el.id)} />
 				))}
 				<Button
-					type="Success"
-					handleClick={this.orderHandler}>ORDER</Button>
+					type="Success">ORDER</Button>
 			</form>
 		);
 		if (this.state.loading) {
